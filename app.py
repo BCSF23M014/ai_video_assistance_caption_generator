@@ -1,9 +1,8 @@
-import os
 import streamlit as st
 
+# Get API key
+api_key = st.secrets.get("GOOGLE_API_KEY")
 import imageio_ffmpeg
-import os
-
 os.environ["IMAGEIO_FFMPEG_EXE"] = imageio_ffmpeg.get_ffmpeg_exe()
 
 
@@ -20,8 +19,7 @@ except OSError:
 def load_whisper_model():
     return whisper.load_model("tiny")
 
-# Get API key
-api_key = st.secrets.get("GOOGLE_API_KEY")
+import os
 import subprocess
 from datetime import timedelta
 import srt
