@@ -1,3 +1,9 @@
+import sys
+print(sys.executable)
+import pkg_resources
+print([pkg.key for pkg in pkg_resources.working_set])
+
+
 import os
 import streamlit as st
 
