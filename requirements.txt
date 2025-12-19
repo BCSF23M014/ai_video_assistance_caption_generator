@@ -1,0 +1,46 @@
+streamlit==1.52.2
+python-dotenv
+
+# Video & audio processing
+moviepy==1.0.3
+imageio
+imageio-ffmpeg
+ffmpeg-python
+
+# Whisper transcription
+openai-whisper
+torch==2.9.1
+torchaudio==2.9.1
+numpy
+numba
+tqdm
+more-itertools
+tiktoken
+# triton removed for faster deployment
+
+# NLP & visualization
+spacy==3.8.0
+# xx-sent-ud-sm removed; can download inside app if needed
+
+# Subtitle handling
+srt
+
+# NLP & visualization
+matplotlib==3.10.8
+wordcloud==1.9.4
+regex
+
+# LangChain ecosystem
+langchain==1.2.0
+langchain-community
+langchain-huggingface
+langchain-google-genai
+chromadb
+sentence-transformers==5.2.0
+
+# Data validation
+pydantic
+scikit-learn==1.8.0
+
+# Translation
+argostranslate
