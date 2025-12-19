@@ -523,7 +523,7 @@ if uploaded_video:
         srt_path = "captions/output.srt"
         with open(srt_path, "w", encoding="utf-8") as f:
             f.write(srt_content)
-        ffmpeg_path = r"C:\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe"
+        ffmpeg_path = "ffmpeg"
         st.info("Burning subtitles...")
         burn_subtitles(video_path, srt_path, "videos/output_video.mp4", ffmpeg_path)
         st.success("✅ Video with captions ready!")
