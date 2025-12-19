@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 import streamlit as st
 
 import imageio_ffmpeg
@@ -7,8 +6,6 @@ import os
 
 os.environ["IMAGEIO_FFMPEG_EXE"] = imageio_ffmpeg.get_ffmpeg_exe()
 
-# Load .env file
-load_dotenv()
 
 import spacy
 try:
@@ -24,7 +21,7 @@ def load_whisper_model():
     return whisper.load_model("tiny")
 
 # Get API key
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = st.secrets.get("GOOGLE_API_KEY")
 import subprocess
 from datetime import timedelta
 import srt
