@@ -1,9 +1,9 @@
+import os
 import streamlit as st
 
 # Get API key
 api_key = st.secrets.get("GOOGLE_API_KEY")
 import imageio_ffmpeg
-os.environ["IMAGEIO_FFMPEG_EXE"] = imageio_ffmpeg.get_ffmpeg_exe()
 
 
 import spacy
@@ -19,12 +19,11 @@ except OSError:
 def load_whisper_model():
     return whisper.load_model("tiny")
 
-import os
 import subprocess
 from datetime import timedelta
 import srt
 import whisper
-import streamlit as st
+
 # from moviepy.editor import VideoFileClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from collections import Counter
