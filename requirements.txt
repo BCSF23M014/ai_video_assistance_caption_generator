@@ -2,8 +2,10 @@ streamlit
 moviepy
 imageio
 imageio-ffmpeg
-openai-whisper
 ffmpeg-python
+openai-whisper
+torch
+setuptools
 spacy
 srt
 matplotlib
