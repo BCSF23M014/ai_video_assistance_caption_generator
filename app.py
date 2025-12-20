@@ -3,12 +3,22 @@ print(sys.executable)
 import pkg_resources
 print([pkg.key for pkg in pkg_resources.working_set])
 
-import os
-import streamlit as st
 
+import streamlit as st
 # Get API key
 api_key = st.secrets.get("GOOGLE_API_KEY")
+print(api_key)
+from moviepy import VideoFileClip
+import whisper
+import subprocess
+import os
+from datetime import timedelta
 
+
+print("all are imported")
+
+
+import srt
 import spacy
 try:
     nlp = spacy.load("xx_sent_ud_sm")
@@ -17,20 +27,16 @@ except OSError:
     spacy.cli.download("xx_sent_ud_sm")
     nlp = spacy.load("xx_sent_ud_sm")
 
+print("spacy")
+
 # -------------------------
 # Whisper model loading
 # -------------------------
-import whisper
-
 @st.cache_resource
 def load_whisper_model():
     # Ensure model path is explicit to avoid errors in Streamlit Cloud
     return whisper.load_model("tiny")
 
-import subprocess
-from datetime import timedelta
-import srt
-from moviepy.video.io.VideoFileClip import VideoFileClip
 from collections import Counter
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
@@ -202,14 +208,24 @@ def convert_to_srt(transcription_result):
 # -------------------------
 # Burn subtitles
 # -------------------------
-def burn_subtitles(video_path, srt_path, output_path, ffmpeg_path="ffmpeg"):
+def burn_subtitles(video_path, srt_path, output_path):
     """
     Correct FFmpeg path usage:
     - Use quotes to avoid spaces in paths
     - Works in Streamlit Cloud
     """
-    command = [ffmpeg_path, "-i", video_path, "-vf", f"subtitles={srt_path}", output_path]
+    
+    # command = [ffmpeg_path, "-i", video_path, "-vf", f"subtitles={srt_path}", output_path]
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i", video_path,
+        "-vf", f"subtitles={srt_path}",
+        "-c:a", "copy",
+        output_path
+    ]
     subprocess.run(command, check=True)
+    
 
 # -------------------------
 # Wordcloud + analysis
