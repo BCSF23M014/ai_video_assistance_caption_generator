@@ -380,7 +380,7 @@ def create_video_chatbot(transcript_text, api_key):
         collection_name="video_transcript"
     )
 
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 4, "include_metadata": True})
 
     qa_chain = RetrievalQA.from_chain_type(
         llm=ChatGoogleGenerativeAI(
@@ -396,8 +396,36 @@ def create_video_chatbot(transcript_text, api_key):
 
     return qa_chain
 
+def calculate_confidence(result):
+    """
+    Calculates confidence based on retrieval relevance
+    """
+    source_docs = result.get("source_documents", [])
 
+    # If nothing retrieved → very low confidence
+    if not source_docs:
+        return 0.15
 
+    # Similarity proxy: more chunks = more confidence
+    retrieval_score = min(len(source_docs) / 4, 1.0)
+
+    # Transcript coverage
+    total_chars = sum(len(doc.page_content) for doc in source_docs)
+    coverage_score = min(total_chars / 1500, 1.0)
+
+    # Detect NOT discussed
+    answer = result["result"].lower()
+    discussed_flag = 0.0 if "not discussed" in answer else 1.0
+
+    confidence = (
+        0.5 * retrieval_score
+        + 0.3 * coverage_score
+        + 0.2 * discussed_flag
+    )
+
+    return round(confidence, 2)
+
+confidence = calculate_confidence(result)
 # -----------------------------
 # Video Analyzer
 # -----------------------------
@@ -559,77 +587,55 @@ if uploaded_video:
             
 
 
-                result = chatbot.invoke({
-                   "query": user_input,
-                #    "history": build_history()
-                })
- 
-
+                result = chatbot.invoke({"query": user_input})
+                
+                confidence = calculate_confidence(result)
+                
                 answer_text = result["result"]
-                st.markdown("### 🤖 Chatbot Response")
-                st.write(answer_text)
-
-                st.session_state.conversation_memory.append({
-                   "user": user_input,
-                   "ai": answer_text
-               })
-               
-               # Log to DB
-                log_interaction(
-                 task_type="MEMORY",
-                 user_query=user_input,
-                 agent_response=answer_text,
-                 confidence=1.0
-               )
-
-            # Save to session memory
-                st.session_state.conversation_memory.append({
-                "user": user_input,
-                 "ai": answer_text
-               })
-
-                # st.stop()   # 🔴 VERY IMPORTANT: stop further chatbot execution
-
-                # Pydantic validation
+                
                 qa_validated = QAResponse(
                     topic_in_video=answer_text.splitlines()[0],
                     video_content=answer_text.splitlines()[1],
                     general_answer=answer_text.splitlines()[2],
-                    confidence=1.0
+                    confidence=confidence
                 )
-
-                log_interaction(
-                  task_type="QA",
-                  user_query=user_input,
-                  agent_response=answer_text,
-                  confidence=qa_validated.confidence
-                )
-
-
-                # st.session_state.chat_history.append(("You", user_input))
-                video_content_clean = qa_validated.video_content.strip().upper()  # removes spaces/newlines
-
-                if video_content_clean == " ":
+                
+                video_content_clean = qa_validated.video_content.strip().upper()
+                
+                if video_content_clean == "N/A":
                     response_text = f"""
-                Present in Video: {qa_validated.topic_in_video}
-
-                General answer: {qa_validated.general_answer}
+                **Present in Video:** {qa_validated.topic_in_video}
+                
+                **General Answer:**  
+                {qa_validated.general_answer}
                 """
                 else:
                     response_text = f"""
-                Present in Video: {qa_validated.topic_in_video}
-
-                Answer from Video: {qa_validated.video_content}
-
-                General answer: {qa_validated.general_answer}
+                **Present in Video:** {qa_validated.topic_in_video}
+                
+                **Answer from Video:**  
+                {qa_validated.video_content}
+                
+                **General Answer:**  
+                {qa_validated.general_answer}
                 """
-
-
-
-
-                # st.session_state.chat_history.append(("Chatbot", response_text))
-
+                
+                st.markdown("### 🤖 Chatbot Response")
+                st.markdown(response_text)
                 st.write("Confidence:", qa_validated.confidence)
+                
+                st.session_state.conversation_memory.append({
+                    "user": user_input,
+                    "ai": response_text
+                })
+                
+                log_interaction(
+                    task_type="QA",
+                    user_query=user_input,
+                    agent_response=response_text,
+                    confidence=qa_validated.confidence
+                )
+
                 # Render chat
                 for sender, msg in st.session_state.chat_history:
                     if sender == "You":
@@ -649,7 +655,7 @@ if uploaded_video:
             try:
                 chatbot = create_video_chatbot(st.session_state["transcript_text"], api_key)
                 summary_result = chatbot.invoke("Summarize this video transcript in a few sentences.")
-                summary_validated = SummaryResponse(summary=summary_result["result"], confidence=1.0)
+                summary_validated = SummaryResponse(summary=summary_result["result"], confidence=confidence)
                 st.write(summary_validated.summary)
                 st.write("Confidence:", summary_validated.confidence)
                 log_interaction(
@@ -686,7 +692,7 @@ if uploaded_video:
                    task_type="CATEGORY",
                    user_query="Categorize video",
                    agent_response=category_result["result"],
-                   confidence=1.0
+                   confidence=confidence
                 )
 
 
