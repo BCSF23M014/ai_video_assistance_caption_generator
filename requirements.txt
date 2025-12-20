@@ -10,6 +10,7 @@ spacy
 srt
 matplotlib
 wordcloud
+numpy==1.26.4
 pydantic
 langchain
 langchain-classic
