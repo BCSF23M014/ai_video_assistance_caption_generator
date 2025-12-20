@@ -27,12 +27,12 @@ except OSError:
 
 
 from pydantic import BaseModel, Field, ValidationError
-from langchain_classic.docstore.document import Document
-from langchain_classic.vectorstores import Chroma
+from langchain.docstore.document import Document
+from langchain.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
-from langchain_classic.chains import RetrievalQA
-from langchain_classic.prompts import PromptTemplate
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 #---------database
 import sqlite3
