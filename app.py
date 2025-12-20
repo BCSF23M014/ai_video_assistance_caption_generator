@@ -19,13 +19,13 @@ print("all are imported")
 
 
 import srt
-import spacy
-try:
-    nlp = spacy.load("xx_sent_ud_sm")
-except OSError:
-    import spacy.cli
-    spacy.cli.download("xx_sent_ud_sm")
-    nlp = spacy.load("xx_sent_ud_sm")
+# import spacy
+# try:
+#     nlp = spacy.load("xx_sent_ud_sm")
+# except OSError:
+#     import spacy.cli
+#     spacy.cli.download("xx_sent_ud_sm")
+#     nlp = spacy.load("xx_sent_ud_sm")
 
 print("spacy")
 
