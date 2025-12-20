@@ -425,7 +425,7 @@ def calculate_confidence(result):
 
     return round(confidence, 2)
 
-confidence = calculate_confidence(result)
+
 # -----------------------------
 # Video Analyzer
 # -----------------------------
