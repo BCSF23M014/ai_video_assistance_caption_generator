@@ -14,6 +14,7 @@ pydantic
 langchain
 langchain-classic
 langchain-core
+langchain-community
 langchain-google-genai
 langchain-huggingface
 sentence-transformers
