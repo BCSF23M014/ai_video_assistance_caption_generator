@@ -1,24 +1,36 @@
-streamlit
-moviepy
-imageio
-imageio-ffmpeg
-ffmpeg-python
-openai-whisper
-torch
-setuptools
-spacy
-srt
-matplotlib
-wordcloud
+# Core
+python-dotenv
+streamlit==1.52.2
+
+# Video
+moviepy==2.2.1
+imageio==2.37.2
+imageio-ffmpeg==0.6.0
+ffmpeg-python==0.2.0
+
+# Whisper
+openai-whisper==20250625
+torch==2.2.2
 numpy==1.26.4
-pydantic
-langchain
-langchain-classic
-langchain-core
-langchain-community
-langchain-google-genai
-langchain-huggingface
-sentence-transformers
+
+# NLP
+spacy==3.8.11
+xx-sent-ud-sm==3.8.0
+srt==3.5.3
+
+# Visualization
+matplotlib==3.8.4
+wordcloud==1.9.4
+
+# LangChain (LOCKED, COMPATIBLE)
+langchain==0.1.20
+langchain-core==0.1.52
+langchain-community==0.0.38
+langchain-google-genai==0.0.9
+langsmith==0.1.147
+
+# Vector DB
 chromadb==0.4.24
-argostranslate
-https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.8.0/xx_sent_ud_sm-3.8.0-py3-none-any.whl
+
+# Embeddings
+sentence-transformers==2.6.1
