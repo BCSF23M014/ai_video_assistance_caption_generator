@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 # Get API key
 api_key = st.secrets.get("GOOGLE_API_KEY")
@@ -18,6 +16,14 @@ import re
 @st.cache_resource
 def load_whisper_model():
     return whisper.load_model("tiny")
+
+import spacy
+
+try:
+    nlp = spacy.load("xx_sent_ud_sm")
+except OSError:
+    nlp = None
+
 
 
 from pydantic import BaseModel, Field, ValidationError
