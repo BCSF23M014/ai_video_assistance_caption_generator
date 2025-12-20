@@ -18,6 +18,6 @@ langchain-community
 langchain-google-genai
 langchain-huggingface
 sentence-transformers
-chromadb
+chromadb==0.4.24
 argostranslate
 https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.8.0/xx_sent_ud_sm-3.8.0-py3-none-any.whl
